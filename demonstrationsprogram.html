@@ -1,0 +1,229 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="adventure.css">
+</head>
+
+<body onload="start();">
+	<h1 class="c64p">Demonstrationsprogram</h1>
+	<textarea id="output" rows="25" cols="100" style="resize:none" class="c64p px12"></textarea>
+	<br/>
+	<input type="text" id="user_input" size="101" name="user_input" class="c64p px12">
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+
+	<p>Demonstrationsprogram fra Niels Søndergaards bog "Lav Dine Egne Computer Eventyr med Basic". Programmet er konverteret til Javascript, men stilen er bibeholdt fra det 
+	oprindelige program. </p>
+
+	<script type="text/javascript">
+		$("#user_input").keyup(function(event) {
+		    if (event.keyCode === 13) {
+		        parsning(document.getElementById('user_input').value);
+		    }
+		});
+
+	</script>
+
+	<script>
+
+	var textarea = document.getElementById('output');
+	setInterval(function(){
+	    textarea.scrollTop = textarea.scrollHeight;
+	}, 100);
+
+	function print_from_field(input_field) {
+	    var targ = input_field.target || input_field.srcElement;
+	    document.getElementById("output").value += '> ' + document.getElementById('user_input').value + '\n';
+	    document.getElementById('user_input').value = '';
+	}
+
+	function print(str) {
+	    document.getElementById("output").value += str + '\n';
+	    document.getElementById('user_input').value = '';
+	    document.getElementById("user_input").focus();	
+	}
+
+	/*
+	10 REM DEMONSTRATIONSPROGRAM TIL EVENTYRSPIL
+	*/
+	var antal_lokationer = 10;
+	var antal_navneord = 10;
+	var antal_udsagnsord = 3;
+	var antal_genstande = 6;
+
+	// beskrivelse, nord, syd, øst, vest
+	var lokationer = [['RUM NR. 1', 0,5,2,0],
+	                  ['RUM NR. 2', 0,0,3,1],
+	                  ['RUM NR. 3', 0,7,4,2],
+	                  ['RUM NR. 4', 0,0,0,3],
+	                  ['RUM NR. 5', 1,0,0,0],
+	                  ['RUM NR. 6', 0,9,7,0],
+	                  ['RUM NR. 7', 3,10,8,6],
+	                  ['RUM NR. 8', 0,0,0,7],
+	                  ['RUM NR. 9', 6,0,10,0],
+	                  ['RUM NR. 10', 7,0,0,9]];
+
+	var verdenshjoerner = ['NORDPÅ', 'SYDPÅ', 'ØSTPÅ', 'VESTPÅ'];
+
+	var genstands_lokalitet = [2,3,4,6,8,10];
+	var genstand_beskrivelse = ['EN BLYANT', 'ET SVÆRD', 'ET SPEJL', 'ET ÆBLE', 'EN FLASKE' ,'EN BOG'];
+
+	var udsagnsord = ['GÅ', 'TAG', 'LÆG'];
+	var navneord = ['BLY', 'SVÆ', 'SPE', 'ÆBL', 'FLA', 'BOG', 'NOR', 'SYD', 'ØST', 'VES'];
+	var lo = 3;
+
+	function start() {
+		print('\n');
+		print(skaermtekst_subrutine());
+		print('\n> HVAD VIL DU GØRE?\n');
+		document.getElementById("user_input").focus();	
+	}
+
+	function skaermtekst_subrutine() {
+	  var skaermtekst = 'DU ER I ' + lokationer[lo-1][0] + '.\n\n';
+	  for (var l = 0; l < genstands_lokalitet.length; l++) {
+	    if (genstands_lokalitet[l] == lo) {
+	      skaermtekst += 'DU KAN SE: ' + genstand_beskrivelse[l] + '.\n\n'; 
+	    }
+	  }
+	  skaermtekst += 'DU KAN GÅ: ';
+	  for (var retning = 1; retning <= 4; retning++) {  
+	    if (lokationer[lo-1][retning] > 0) {
+	      skaermtekst += verdenshjoerner[retning-1] + ' ';
+	    }
+	  }
+	  return skaermtekst + '\n';
+	 }
+
+	 function kig() {
+	 	print(skaermtekst_subrutine());
+	 }
+
+	function parsning(input_streng) {
+	  var is = input_streng.toUpperCase().trim();
+	  switch(is) {
+	  case "STATUS": 
+	    status();
+	    return;
+	    break;
+	  case "KIG":
+	  	kig();
+	  	break;
+	  case "N":
+	    is = "GÅ NORDPÅ";
+	    break;
+	  case "S":
+	    is = "GÅ SYDPÅ";
+	    break;
+	  case "Ø": 
+	  case "E":
+	    is = "GÅ ØSTPÅ";
+	    break;
+	  case "V":
+	  case "W":
+	    is = "GÅ VESTPÅ";
+	    break;
+		}
+
+		if (!is.indexOf(" ")>0) om_igen();
+
+		var ord = is.split(" ");
+		var udsagnsordet = ord[0].slice(0, 3);
+		var navneordet = ord[1].slice(0, 3);
+
+		var udsagnsord_nummer = -1;
+		for (var u=0; u < udsagnsord.length; u ++) {
+		  if (udsagnsordet === udsagnsord[u]) {
+		    udsagnsord_nummer = u;
+		    break;
+		  }
+		}
+
+		var navnesord_nummer = -1;
+		for (var n=0; u < navneord.length; n ++) {
+		  if (navneordet === navneord[n]) {
+		    navnesord_nummer = n;
+		    break;
+		  }
+		}
+
+		switch (udsagnsord_nummer) {
+		  case 0: // GÅ
+		    gaa(navnesord_nummer);
+		    break;
+		  case 1: // TAG
+		    tag(navnesord_nummer);
+		    break;
+		  case 2: // LÆG
+		    laeg(navnesord_nummer);
+		    break;
+		  default:
+		  	om_igen();
+		  	break;
+		}
+	}
+
+
+	function om_igen () {
+	  print('OM IGEN');
+	  return;
+	}
+
+	function gaa(navnesord_nummer) {
+	  if (navnesord_nummer<6 || navnesord_nummer > 9) {
+	  	om_igen();
+	  	return;
+	  }
+	  var retning = navnesord_nummer - 5;
+	  if (lokationer[lo-1][retning] == 0) {
+	    return "DU KAN IKKE GA DEN VEJ.";
+	  } else {
+	    lo = lokationer[lo-1][retning];
+	    print(skaermtekst_subrutine());
+	  }
+	}
+
+	function tag(navnesord_nummer) {
+	  if (navnesord_nummer > navneord.length) om_igen();
+	  if (genstands_lokalitet[navnesord_nummer] == -1)  {
+	    print('DET HAR DU ALLEREDE GJORT.');
+	  } else if (genstands_lokalitet[navnesord_nummer] == lo) {
+	    genstands_lokalitet[navnesord_nummer] = -1;
+	    print('UDEMÆRKET\n'); 
+	  } else {
+	    print(genstand_beskrivelse[navnesord_nummer] + 'FINDES IKKE HER.');
+	  }
+
+	}
+
+	function laeg(navnesord_nummer) {
+	  if (navnesord_nummer > navneord.length) om_igen();
+	  if (genstands_lokalitet[navnesord_nummer] == -1)  {
+	    genstands_lokalitet[navnesord_nummer] = lo;
+	    print('UDEMÆRKET\n');  
+	  } else {
+	    print('FOR AT KUNNE LÆGGE NOGET, MÅ MAN HAVE DET PA SIG.');
+	  }
+	}
+
+	function status() {
+	  var status = 'DU BÆRER FØLGENDE: \n ';
+	  var bp = 0;
+	  for (var i = 0; i < genstands_lokalitet.length; i++) {
+	    if (genstands_lokalitet[i] == -1) {
+	      bp++;
+	      status += genstand_beskrivelse[i] + '\n';
+	    }
+	  }
+	  if (bp == 0) {
+	    print(status + 'INGENTING\n');
+	  } else {
+	    print(status + '\n');
+	  }
+	}
+
+
+	</script>
+</body>
+</html>
