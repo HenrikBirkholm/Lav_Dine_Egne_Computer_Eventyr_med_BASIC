@@ -1,0 +1,42 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<textarea id="output" rows="25" cols="150" style="resize:none"></textarea>
+<br/>
+<input type="text" id="user_input" size="152" name="user_input">
+
+
+
+
+<ol onclick="print(event)">
+<li>Hello</li>
+<li>World</li>
+<li>Earthlings</li>
+</ol>
+
+<script type="text/javascript">
+	$("#user_input").keyup(function(event) {
+    if (event.keyCode === 13) {
+        print("user_input");
+    }
+});
+</script>
+
+
+<script>
+
+function print(input_field) {
+    var targ = input_field.target || input_field.srcElement;
+    document.getElementById("output").value += '> ' + document.getElementById('user_input').value + '\n';
+    document.getElementById('user_input').value = '';
+}
+
+
+</script>
+
+</body>
+</html>
