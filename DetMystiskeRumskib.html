@@ -243,11 +243,11 @@ function dr_retning() {
 670 PRINT
 680 IF BS="R" THEN 620
 
-690 IF B$="F" THEN B$="GA FORUD"
-700 IF B$="A" THEN B$="GA AGTERUD"
+690 IF B$="F" THEN B$="GÅ FORUD"
+700 IF B$="A" THEN B$="GÅ AGTERUD"
 710 IF B$="STATUS" THEN 2990
 720 IF B$="STOP" THEN 3620
-730 IF B$="HJFELP" THEN 2680
+730 IF B$="HJÆLP" THEN 2680
 740 FOR I=1 TO LEN(B$)
 750 IF MID$(B$,I,1)=" " THEN 780
 760 NEXT I
@@ -331,6 +331,12 @@ function dr_retning() {
 1250 PRINT "RUMSKIBET DREJER 30 GRADER.":DR=DR+1: 
    GOSUB 630:RETURN
 1260 PRINT "PRØV NOGET ANDET.":RETURN
+
+*/
+
+//parsning logig - stjæl fra demoprogram.
+
+/*
 
 1269 REM UNDERSØGE *****
 1270 IF N0=1 AND LO=1 THEN GOSUB 1400:GOTO 650:REM 
@@ -540,7 +546,7 @@ function dr_retning() {
 2710 PRINT "_ MEN HER KAN DU NØJES MED" 
 2720 PRINT "AT SKRIVE 'F' FOR 'GA FORUD'" 
 2730 PRINT "OG 'A' FOR 'GA AGTERUD'."
-2740 PRINT:PRINT "TAGE _ LÆGGE _ BRUGE _ LIESE":REM
+2740 PRINT:PRINT "TAGE _ LÆGGE _ BRUGE _ LÆSE":REM
   HVIS LAE SÅ STU *****
 2750 PRINT "_ AKTIVERE _ UNDERSØGE."
 2760 PRINT '(DISSE ORD SKAL EFTERFØLGES AF' 
@@ -725,6 +731,16 @@ function dr_retning() {
 3890 PRINT:PRINT "HAR DU LYST TIL":PRINT 'AT PRØVE 
    EN GANG TIL?"
 3900 GOSUB 4080
+
+*/
+
+  function afslutningsrutine() {
+    var afslutning = 'BEKLAGER...SÅDAN ER LIVET.\n';
+    afslutning += 'HAR DU LYST TIL AT PRØVE EN GANG TIL?';
+    ja-nej-rutine();
+  }
+
+/*
 3910 A$=INKEY%:REM COMMODORE-BRUGER, SKRIV I 
    STEDET: GET A$ *****
 3915 IF A$="" THEN 3910
@@ -753,12 +769,18 @@ function dr_retning() {
 4059 REM LØKKE-SUBRUTINE *****
 4060 FOR X=1 TO (N*1000):NEXT X
 4070 RETURN
+
 4079 REM JA/NEJ-SUBRUTINE *****
-4060 PRINT:PRINT 'TRYK PA 'J' FOR 1JA'':PRINT 'ELLER 
+4080 PRINT:PRINT 'TRYK PA 'J' FOR 1JA'':PRINT 'ELLER 
    'N' FOR 'NEJ'."
 4090 RETURN 
 4100 END
 */
+
+  function ja-nej-rutine() {
+    var str = 'TRYK PA \'J\' FOR \'JA\' ELLER \'N\' FOR \'NEJ\'.';
+    print(str);
+  }
 
 /*
 4109 REM OM IGEN-RUTINE *****
